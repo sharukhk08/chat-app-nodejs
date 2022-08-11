@@ -9,7 +9,7 @@ app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://chat-app-react-node.netlify.app/",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   },
 });
@@ -70,9 +70,11 @@ io.on("connection", (socket) => {
     });
 });
 
+const PORT = process.env.PORT || 4000;
+
 server
-  .listen(3001, () => {
-    console.log("Server is running on port 3001");
+  .listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
   })
   .on("error", (err) => {
     console.log(err);

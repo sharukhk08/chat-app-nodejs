@@ -7,10 +7,21 @@ const { Server } = require("socket.io");
 app.use(cors());
 
 const server = http.createServer(app);
-const io = new Server(server, {
+// const io = new Server(server, {
+//   cors: {
+//     // origin: "https://chat-app-react-node.netlify.app/",
+//     origin: "http://localhost:3000",
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   },
+// });
+
+const io = require("socket.io")(server, {
+  transport: ["websocket"],
   cors: {
-    origin: "https://chat-app-react-node.netlify.app/",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    origin: ["https://chat-app-react-node.netlify.app", "*"],
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    // allowedHeaders: ["x-access-token"],
+    credentials: true,
   },
 });
 

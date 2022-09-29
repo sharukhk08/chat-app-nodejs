@@ -5,7 +5,6 @@ const cors = require("cors");
 const { Server } = require("socket.io");
 
 app.use(cors());
-
 const server = http.createServer(app);
 // const io = new Server(server, {
 //   cors: {
@@ -18,7 +17,11 @@ const server = http.createServer(app);
 const io = require("socket.io")(server, {
   transport: ["websocket"],
   cors: {
-    origin: ["https://chat-app-react-node.netlify.app", "*"],
+    origin: [
+      "https://chat-app-react-node.netlify.app",
+      "*",
+      "http://localhost:3000",
+    ],
     methods: ["GET", "POST", "DELETE", "PUT"],
     // allowedHeaders: ["x-access-token"],
     credentials: true,
@@ -62,6 +65,19 @@ io.on("connection", (socket) => {
     socket.on("call", (msg) => {
       console.log("Call: " + msg);
       io.emit("call", msg);
+    }),
+    // CALL USER
+
+    socket.on("callUser", (data) => {
+      console.log("Call: " + data);
+      io.to(data.userToCall).emit("callUser", {
+        signal: data.signalData,
+        from: data.from,
+        name: data.name,
+      });
+    }),
+    socket.on("answerCall", (data) => {
+      io.to(data.answerCall).emit("callAccepted", data.signal);
     }),
     socket.on("answer", (msg) => {
       console.log("Answer: " + msg);
